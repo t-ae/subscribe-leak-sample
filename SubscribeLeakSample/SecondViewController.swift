@@ -23,16 +23,24 @@ class SecondViewController : UIViewController {
             .bindTo(label.rx.text)
             .addDisposableTo(disposeBag)
         
+        func someFunc2(_ str: String) {
+            print("someFunc2: \(str)")
+        }
+        
         str.asObservable()
 //            .subscribe(onNext: { [weak self] in self!.someFunc($0) }) // This don't cause leak
             .subscribe(onNext: someFunc) // This causes leak
-//            .bindNext(someFunc) // This causes, too
+//            .bindNext(someFunc2) // This causes, too
             .addDisposableTo(disposeBag)
         
     }
     
     func someFunc(_ str: String) {
         print("someFunc: \(str)")
+    }
+    
+    let someFunc3 = { (str:String) in
+        print("someFunc3: \(someFunc)")
     }
     
     deinit {
