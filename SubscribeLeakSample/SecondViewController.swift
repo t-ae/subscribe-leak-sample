@@ -13,34 +13,51 @@ import RxCocoa
 
 class SecondViewController : UIViewController {
     let disposeBag = DisposeBag()
-    @IBOutlet weak var label: UILabel!
     
     let str = Variable("Binded")
     
+    func someFunc1(_ str: String) {
+        print("someFunc1: \(str)")
+    }
+    
+    let someFunc2 = { (str:String) in
+        print("someFunc2: \(str)")
+    }
+    
     override func viewDidLoad() {
         
-        str.asObservable()
-            .bindTo(label.rx.text)
-            .addDisposableTo(disposeBag)
-        
-        func someFunc2(_ str: String) {
-            print("someFunc2: \(str)")
+        func someFunc3(_ str: String) {
+            print("someFunc3: \(str)")
         }
         
-        str.asObservable()
-//            .subscribe(onNext: { [weak self] in self!.someFunc($0) }) // This don't cause leak
-            .subscribe(onNext: someFunc) // This causes leak
-//            .bindNext(someFunc2) // This causes, too
-            .addDisposableTo(disposeBag)
+        do {
+            // This code causes leak
+            str.asObservable()
+                .subscribe(onNext: { self.someFunc1($0)})
+                .addDisposableTo(disposeBag)
+        }
         
-    }
-    
-    func someFunc(_ str: String) {
-        print("someFunc: \(str)")
-    }
-    
-    let someFunc3 = { (str:String) in
-        print("someFunc3: \(someFunc)")
+        do {
+            // This code does not cause leak
+            str.asObservable()
+                .subscribe(onNext: { [weak self] in self!.someFunc1($0) })
+                .addDisposableTo(disposeBag)
+        }
+        
+        do {
+            // This code does not cause leak
+            str.asObservable()
+                .subscribe(onNext: someFunc2)
+                .addDisposableTo(disposeBag)
+        }
+        
+        do {
+            // This code does not cause leak
+            str.asObservable()
+                .subscribe(onNext: someFunc3)
+                .addDisposableTo(disposeBag)
+        }
+        
     }
     
     deinit {
