@@ -24,10 +24,14 @@ class SecondViewController : UIViewController {
         print("someFunc2: \(str)")
     }
     
+    static func someFunc3(_ str: String) {
+        print("someFunc3: \(str)")
+    }
+    
     override func viewDidLoad() {
         
-        func someFunc3(_ str: String) {
-            print("someFunc3: \(str)")
+        func someFunc4(_ str: String) {
+            print("someFunc4: \(str)")
         }
         
         do {
@@ -54,7 +58,14 @@ class SecondViewController : UIViewController {
         do {
             // This code does not cause leak
             str.asObservable()
-                .subscribe(onNext: someFunc3)
+                .subscribe(onNext: SecondViewController.someFunc3)
+                .addDisposableTo(disposeBag)
+        }
+        
+        do {
+            // This code does not cause leak
+            str.asObservable()
+                .subscribe(onNext: someFunc4)
                 .addDisposableTo(disposeBag)
         }
         
