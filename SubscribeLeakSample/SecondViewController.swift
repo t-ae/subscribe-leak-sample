@@ -11,6 +11,10 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+private func someFunc0(_ str: String) {
+    print("someFunc0: \(str)")
+}
+
 class SecondViewController : UIViewController {
     let disposeBag = DisposeBag()
     
@@ -36,9 +40,9 @@ class SecondViewController : UIViewController {
         
         do {
             // This code causes leak
-            str.asObservable()
-                .subscribe(onNext: someFunc1)
-                .addDisposableTo(disposeBag)
+//            str.asObservable()
+//                .subscribe(onNext: someFunc1)
+//                .addDisposableTo(disposeBag)
         }
         
         do {
@@ -66,6 +70,13 @@ class SecondViewController : UIViewController {
             // This code does not cause leak
             str.asObservable()
                 .subscribe(onNext: someFunc4)
+                .addDisposableTo(disposeBag)
+        }
+        
+        do {
+            // This code does not cause leak
+            str.asObservable()
+                .subscribe(onNext: someFunc0)
                 .addDisposableTo(disposeBag)
         }
         
