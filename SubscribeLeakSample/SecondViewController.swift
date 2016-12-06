@@ -33,7 +33,7 @@ class SecondViewController : UIViewController {
         do {
             // This code causes leak
             str.asObservable()
-                .subscribe(onNext: { self.someFunc1($0)})
+                .subscribe(onNext: someFunc1)
                 .addDisposableTo(disposeBag)
         }
         
