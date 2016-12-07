@@ -11,72 +11,78 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-private func someFunc0(_ str: String) {
-    print("someFunc0: \(str)")
+private func deg0(from rad: Double) -> Double {
+    return rad * 180 / M_PI
 }
 
 class SecondViewController : UIViewController {
     let disposeBag = DisposeBag()
     
-    let str = Variable("Binded")
+    let angle = Variable(1.0)
     
-    func someFunc1(_ str: String) {
-        print("someFunc1: \(str)")
+    func deg1(from rad: Double) -> Double {
+        return rad * 180 / M_PI
     }
     
-    let someFunc2 = { (str:String) in
-        print("someFunc2: \(str)")
+    let deg2 = { (rad: Double) in
+        return rad * 180 / M_PI
     }
     
-    static func someFunc3(_ str: String) {
-        print("someFunc3: \(str)")
+    static func deg3(from rad: Double) -> Double {
+        return rad * 180 / M_PI
     }
     
     override func viewDidLoad() {
         
-        func someFunc4(_ str: String) {
-            print("someFunc4: \(str)")
+        func deg4(from rad: Double) -> Double {
+            return rad * 180 / M_PI
         }
         
         do {
             // This code causes leak
-//            str.asObservable()
-//                .subscribe(onNext: someFunc1)
+//            angle.asObservable()
+//                .map(deg1)
+//                .subscribe()
 //                .addDisposableTo(disposeBag)
         }
         
         do {
             // This code does not cause leak
-            str.asObservable()
-                .subscribe(onNext: { [weak self] in self!.someFunc1($0) })
+            angle.asObservable()
+                .map { [weak self] in self!.deg1(from: $0) }
+                .subscribe()
                 .addDisposableTo(disposeBag)
         }
         
         do {
             // This code does not cause leak
-            str.asObservable()
-                .subscribe(onNext: someFunc2)
+            angle.asObservable()
+                .map(deg2)
+                .subscribe()
                 .addDisposableTo(disposeBag)
         }
         
         do {
             // This code does not cause leak
-            str.asObservable()
-                .subscribe(onNext: SecondViewController.someFunc3)
+            angle.asObservable()
+                .map(SecondViewController.deg3)
+                .subscribe()
                 .addDisposableTo(disposeBag)
         }
         
         do {
             // This code does not cause leak
-            str.asObservable()
-                .subscribe(onNext: someFunc4)
+            angle.asObservable()
+                .map(deg4)
+                .subscribe()
                 .addDisposableTo(disposeBag)
         }
         
         do {
             // This code does not cause leak
-            str.asObservable()
-                .subscribe(onNext: someFunc0)
+            angle.asObservable()
+                .map(deg0)
+                .subscribe()
                 .addDisposableTo(disposeBag)
         }
         
